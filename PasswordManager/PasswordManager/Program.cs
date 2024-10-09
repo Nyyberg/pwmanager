@@ -2,15 +2,16 @@
 {
 class Program
 {
-    static void Main(string[] args)
-    {
-        var service = new Services.Service();
-        Console.WriteLine("Hello, Welcome to password manager");
+        static void Main(string[] args)
+        {
+            var service = new Services.Service();
+            Console.WriteLine("Hello, Welcome to password manager");
 
-        // Ask for user input
-        Console.Write("Do you have a master password? (y/n): ");
-        
-        var answer = Console.ReadLine();
+
+            
+            Console.Write("Do you have a master password? (y/n): ");
+
+            var answer = Console.ReadLine();
 
             if (answer == "y")
             {
@@ -19,17 +20,15 @@ class Program
 
 
             }
-            else if (answer == "n") 
+            else if (answer == "n")
             {
                 Console.WriteLine("Please type a master password you would like :");
                 var masterpassword = Console.ReadLine();
                 service.addMasterpassword(masterpassword);
 
-            }       
-
-        // Wait for user to close the console
-        Console.WriteLine("Press any key to exit...");
-        Console.ReadKey();
+            }
+            
+       
     }
     }
 }
