@@ -10,3 +10,5 @@ nå du åbner programmet ved at køre det gennem visual studio, så er din førs
 - Se dine oprettet passwords
 
 passwords vil blive gemt i database med AES encryption og i console vil de blive vist i plain text, masterpassword vil være det som låser dine passwords op.
+
+vil gerne snakke om det her efter ferien hvis det er muligt, har haft lidt svært ved at komme igang og få det til at virke og vil gerne have noget feedback på hvad jeg kunne gøre fremadrettet :)
