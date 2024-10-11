@@ -45,7 +45,7 @@ namespace PasswordManager.Helpers
         public bool VerifyPassword(string password, byte[] storedHash, byte[] storedSalt) 
         { 
             byte[] hash = Hashpassword(password, storedSalt);
-
+            
             return hash.SequenceEqual(storedHash);
         }
     }

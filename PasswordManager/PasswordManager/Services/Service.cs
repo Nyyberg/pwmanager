@@ -73,6 +73,7 @@ namespace PasswordManager.Services
             {
                 throw new InvalidOperationException("No Master password is set!");
             }
+          
             return _hasher.VerifyPassword(password, masterpassword.Masterpassword, masterpassword.salt);
 
 
