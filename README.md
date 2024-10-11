@@ -6,14 +6,17 @@ Det er simpelt og let at bruge, kom og lad mig vise dig!!
 # Hvordan bruger man PWManager?
 
 nå du åbner programmet ved at køre det gennem visual studio, som vist her!
+
 ![image](https://github.com/user-attachments/assets/77cb39ac-e5da-4d91-8b2b-855c04e638c9)
 
 
 Du bliver så promted til at oprette et masterpassword:
+
 ![image](https://github.com/user-attachments/assets/d51f639f-1651-4e14-bd41-d256047513f3)
 
 
 Efter du har oprettet dit masterpassword and du så logge ind og du får så to muligheder som vist her:
+
 ![image](https://github.com/user-attachments/assets/14b6ac1b-4a9c-411c-a0dc-0e4869d45a3f)
 
 - Se dine passwords
