@@ -12,6 +12,7 @@ namespace PasswordManager.Repositories
     public class RepoContext : DbContext
     {
         public DbSet<Credentials> Credentials { get; set; }
+        public DbSet<EncryptedLogins> EncryptedLogins { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

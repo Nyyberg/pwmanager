@@ -36,6 +36,36 @@ namespace PasswordManager.Services
             _repo.addMasterPassword(credentials);
         }
 
+        public void addLogins(Logins logins, byte[] key) 
+        {
+            var encryptedlogins = PasswordHandler.Encrypt(logins.Password, key);
+            _repo.addLogins(new EncryptedLogins
+            {
+                Password = encryptedlogins,
+                Username = logins.Username,
+                Name = logins.Username,
+            });
+        }
+
+        public List<Logins> getLogins(byte[] key) 
+        {
+            List<EncryptedLogins> encryptedList = _repo.getEncryptedLogins();
+            List<Logins> decryptedList = new List<Logins>();
+
+            foreach (var items in encryptedList) 
+            { 
+                var decryptedLogins = PasswordHandler.Decrypt(items.Password, key);
+                decryptedList.Add(new Logins
+                {
+                    Username = items.Username,
+                    Name = items.Username,
+                    Password = decryptedLogins
+                });
+            }
+            return decryptedList;
+
+        }
+
         public bool verifyPassword(string password)
         {
             Credentials masterpassword = _repo.getCredentials();

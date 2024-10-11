@@ -28,5 +28,17 @@ namespace PasswordManager.Repositories
           return _context.Credentials.FirstOrDefault();
             
         }
+
+        public void addLogins(EncryptedLogins encryptedLogins) 
+        {
+            _context.EncryptedLogins.Add(encryptedLogins);
+            _context.SaveChanges();
+        }
+
+        public List<EncryptedLogins> getEncryptedLogins()
+        {
+            return _context.EncryptedLogins.ToList();
+        }
+
     }
 }
