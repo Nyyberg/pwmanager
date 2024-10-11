@@ -4,7 +4,7 @@ det er min password manager, jeg har desværrer ikke fået min "frontend" til at
 # Iden bag min frontend
 skriver lige hvordan jeg havde planer om at få det til at virke
 
-nå du åbner programmet ved at køre det gennem visual studio, så er din første promt om du har lavet et masterpassword, ja/nej spørgsmål, masterpassword er salted & hashed og gemt, hvis du har lavet et masterpassword skriver du dit masterpassword og der efter får du 2 muligheder
+nå du åbner programmet ved at køre det gennem visual studio, så er din første promt om du har lavet et masterpassword, ja/nej spørgsmål, masterpassword er salted & hashed og gemt, masterpassword er hashed & salted med Argon2id, hvis du har lavet et masterpassword skriver du dit masterpassword og der efter får du 2 muligheder
 
 - Opret ny username, password og navn på der du vil gemme login til
 - Se dine oprettet passwords
