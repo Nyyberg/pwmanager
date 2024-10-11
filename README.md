@@ -6,13 +6,16 @@ Det er simpelt og let at bruge, kom og lad mig vise dig!!
 # Hvordan bruger man PWManager?
 
 nå du åbner programmet ved at køre det gennem visual studio, som vist her!
-https://cdn.discordapp.com/attachments/940898320233164820/1294408886471757855/image.png?ex=670ae7b7&is=67099637&hm=e7b2b2de6102da0fd3e3efbaea057a26e2a7a672a94ab5ec365e8114226de706&
+![image](https://github.com/user-attachments/assets/77cb39ac-e5da-4d91-8b2b-855c04e638c9)
+
 
 Du bliver så promted til at oprette et masterpassword:
-https://cdn.discordapp.com/attachments/940898320233164820/1294409243687911575/image.png?ex=670ae80c&is=6709968c&hm=5e87676a4b88d71f0106042d76785b0b400e807a36253abff29dafbf01ffc482&
+![image](https://github.com/user-attachments/assets/d51f639f-1651-4e14-bd41-d256047513f3)
+
 
 Efter du har oprettet dit masterpassword and du så logge ind og du får så to muligheder som vist her:
-https://cdn.discordapp.com/attachments/940898320233164820/1294409360528773282/image.png?ex=670ae828&is=670996a8&hm=80fb6eb4be67cb87e8043036bfc1bf066f1a7246767391ad006726bae8b5de81&
+![image](https://github.com/user-attachments/assets/14b6ac1b-4a9c-411c-a0dc-0e4869d45a3f)
+
 - Se dine passwords
 - Opret et nyt password med disse variabler så du kan holde styr på hvilket password er til hvad
   - Et Navn
