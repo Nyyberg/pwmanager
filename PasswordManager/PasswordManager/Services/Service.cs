@@ -36,18 +36,24 @@ namespace PasswordManager.Services
             _repo.addMasterPassword(credentials);
         }
 
-        public void addLogins(Logins logins, byte[] key) 
+        public byte[] HashChecker(string password)
+        {
+           return _hasher.Hashpassword(password, new byte[8]);
+        }
+
+
+        public void addLogins(Logins logins, string key) 
         {
             var encryptedlogins = PasswordHandler.Encrypt(logins.Password, key);
             _repo.addLogins(new EncryptedLogins
             {
-                Password = encryptedlogins,
+                Password = Encoding.UTF8.GetBytes(encryptedlogins),
                 Username = logins.Username,
-                Name = logins.Username,
+                Name = logins.Name,
             });
         }
 
-        public List<Logins> getLogins(byte[] key) 
+        public List<Logins> getLogins(string key) 
         {
             List<EncryptedLogins> encryptedList = _repo.getEncryptedLogins();
             List<Logins> decryptedList = new List<Logins>();
@@ -58,7 +64,7 @@ namespace PasswordManager.Services
                 decryptedList.Add(new Logins
                 {
                     Username = items.Username,
-                    Name = items.Username,
+                    Name = items.Name,
                     Password = decryptedLogins
                 });
             }
@@ -76,6 +82,17 @@ namespace PasswordManager.Services
           
             return _hasher.VerifyPassword(password, masterpassword.Masterpassword, masterpassword.salt);
 
+
+        }
+
+        public bool checkForMasterpassword()
+        {
+         Credentials? masterpassword =  _repo.getCredentials();
+
+            if (masterpassword == null) {
+                return false;
+            }
+            return true;
 
         }
     }

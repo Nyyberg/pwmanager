@@ -9,48 +9,83 @@ namespace PasswordManager.Helpers
 {
     public class PasswordHandler
     {
-        public static byte[] Encrypt(string password, byte[] key)
+        private static readonly byte[] IV = new byte[16] { 0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF };
+        public static string Encrypt(string content, string key)
         {
-            using (System.Security.Cryptography.Aes MyAes = System.Security.Cryptography.Aes.Create())
+            using (Aes aes = Aes.Create())
             {
-                MyAes.KeySize = 256;
-                MyAes.Key = key;
-                MyAes.GenerateIV();
+                aes.Key = Convert.FromBase64String(key);
+                aes.IV = IV;
 
-                var encryptor = MyAes.CreateEncryptor(MyAes.Key, MyAes.IV);
-
-                using (var stream = new MemoryStream()) 
+                if (aes.Key.Length != 16 && aes.Key.Length != 24 && aes.Key.Length != 32)
                 {
-                    stream.Write(MyAes.IV, 0, MyAes.IV.Length);
-                    using(var cryptostream = new CryptoStream(stream, encryptor, CryptoStreamMode.Write))
-                    using(var streamwrite = new StreamWriter(stream))
-                    {
-                        streamwrite.Write(password);
-                    }
-                    return stream.ToArray();
+                    throw new ArgumentException("Key must be 16, 24, or 32 bytes long.");
                 }
+
+                ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+
+                try
+                {
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        using (CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
+                        {
+                            using (StreamWriter sw = new StreamWriter(cs))
+                            {
+                                sw.Write(content);
+                            }
+                        }
+                        // Read the contents of the MemoryStream before it is disposed
+                        string encryptedContent = Convert.ToBase64String(ms.ToArray());
+                        return encryptedContent;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Encryption failed with exception: " + ex.Message);
+                    return string.Empty;
+                }
+
             }
         }
 
-        public static string Decrypt(byte[] password, byte[] key) 
+        public static string Decrypt(byte[] password, string key) 
         {
-            using(System.Security.Cryptography.Aes MyAes = System.Security.Cryptography.Aes.Create())
+            string encryptedString = Encoding.UTF8.GetString(password);
+            string decryptedString = string.Empty;
+            using (Aes aes = Aes.Create())
             {
-                MyAes.Key = key;
-                using (var stream = new MemoryStream())
-                {
-                    byte[] iv = new byte[16];
-                    stream.Read(iv, 0, 16);
-                    MyAes.IV = iv;
-                    var decryptor = MyAes.CreateDecryptor(MyAes.Key, MyAes.IV);
-                    var cryptoStream = new CryptoStream(stream, decryptor, CryptoStreamMode.Read);
-                    using(var streamRead = new StreamReader(cryptoStream))
-                    {
-                        return streamRead.ReadToEnd();
-                    }
+                aes.Key = Convert.FromBase64String(key);
+                aes.IV = IV;
 
+                if (aes.Key.Length != 16 && aes.Key.Length != 24 && aes.Key.Length != 32)
+                {
+                    throw new ArgumentException("Key must be 16, 24, or 32 bytes long.");
+                }
+
+                ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+
+                byte[] encrypted = Convert.FromBase64String(encryptedString);
+
+                try
+                {
+                    using (MemoryStream ms = new MemoryStream(encrypted))
+                    {
+                        using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
+                        {
+                            using (StreamReader sr = new StreamReader(cs))
+                            {
+                                decryptedString = sr.ReadToEnd();
+                            }
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Decryption failed. Probably due to wrong key.");
                 }
             }
+             return decryptedString;
         }
 
     }

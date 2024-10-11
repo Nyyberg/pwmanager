@@ -45,7 +45,13 @@ namespace PasswordManager.Helpers
         public bool VerifyPassword(string password, byte[] storedHash, byte[] storedSalt) 
         { 
             byte[] hash = Hashpassword(password, storedSalt);
-            return hash.SequenceEqual(storedHash);
+            string temp = Encoding.UTF8.GetString(hash);
+            string temp2 = Encoding.UTF8.GetString(storedHash);
+            if (temp == temp2) {
+
+                return true;
+            }
+            return false;
         }
     }
 }
