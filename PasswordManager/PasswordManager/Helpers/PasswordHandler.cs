@@ -9,25 +9,30 @@ namespace PasswordManager.Helpers
 {
     public class PasswordHandler
     {
-        private static readonly byte[] IV = new byte[16] { 0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF };
         public static string Encrypt(string content, string key)
         {
             using (Aes aes = Aes.Create())
             {
                 aes.Key = Convert.FromBase64String(key);
-                aes.IV = IV;
 
                 if (aes.Key.Length != 16 && aes.Key.Length != 24 && aes.Key.Length != 32)
                 {
                     throw new ArgumentException("Key must be 16, 24, or 32 bytes long.");
                 }
 
-                ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+                
+                aes.GenerateIV();
+                byte[] iv = aes.IV;
+
+                ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, iv);
 
                 try
                 {
                     using (MemoryStream ms = new MemoryStream())
                     {
+                       
+                        ms.Write(iv, 0, iv.Length);
+
                         using (CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
                         {
                             using (StreamWriter sw = new StreamWriter(cs))
@@ -35,7 +40,8 @@ namespace PasswordManager.Helpers
                                 sw.Write(content);
                             }
                         }
-                        // Read the contents of the MemoryStream before it is disposed
+
+                        
                         string encryptedContent = Convert.ToBase64String(ms.ToArray());
                         return encryptedContent;
                     }
@@ -45,31 +51,37 @@ namespace PasswordManager.Helpers
                     Console.WriteLine("Encryption failed with exception: " + ex.Message);
                     return string.Empty;
                 }
-
             }
         }
 
-        public static string Decrypt(byte[] password, string key) 
+        public static string Decrypt(byte[] password, string key)
         {
             string encryptedString = Encoding.UTF8.GetString(password);
+            byte[] encryptedDataWithIv = Convert.FromBase64String(encryptedString);
+
             string decryptedString = string.Empty;
             using (Aes aes = Aes.Create())
             {
                 aes.Key = Convert.FromBase64String(key);
-                aes.IV = IV;
 
                 if (aes.Key.Length != 16 && aes.Key.Length != 24 && aes.Key.Length != 32)
                 {
                     throw new ArgumentException("Key must be 16, 24, or 32 bytes long.");
                 }
 
-                ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+               
+                byte[] iv = new byte[aes.BlockSize / 8];
+                Array.Copy(encryptedDataWithIv, 0, iv, 0, iv.Length);
 
-                byte[] encrypted = Convert.FromBase64String(encryptedString);
+                
+                byte[] encryptedData = new byte[encryptedDataWithIv.Length - iv.Length];
+                Array.Copy(encryptedDataWithIv, iv.Length, encryptedData, 0, encryptedData.Length);
+
+                ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, iv);
 
                 try
                 {
-                    using (MemoryStream ms = new MemoryStream(encrypted))
+                    using (MemoryStream ms = new MemoryStream(encryptedData))
                     {
                         using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
                         {
@@ -82,11 +94,12 @@ namespace PasswordManager.Helpers
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("Decryption failed. Probably due to wrong key.");
+                    Console.WriteLine("Decryption failed. Probably due to wrong key or data corruption.");
                 }
             }
-             return decryptedString;
+            return decryptedString;
         }
-
     }
 }
+
+
